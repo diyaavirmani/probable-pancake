@@ -4,6 +4,8 @@ import { homedir } from "node:os";
 import { spawnSync } from "node:child_process";
 import type { AgentConfig, ActionLog } from "./types";
 import { ActionTracker } from "./actiontracker";
+import { PDFParse } from "pdf-parse";
+
 
 const TEXT_EXT = new Set([
     ".ts",
@@ -21,6 +23,7 @@ const TEXT_EXT = new Set([
     ".yaml",
     ".toml",
     ".txt",
+    ".pdf",
 ]);
 
 function isProbablyTextFile(filePath: string): boolean {
@@ -41,11 +44,11 @@ export class ToolExecutor {
 
     private resolveSafe(rel: string): string {
         const abs = path.resolve(this.config.codebasePath, rel);
-        const root = path.resolve(this.config.codebasePath);
-        const relCheck = path.relative(root, abs);
-        if (relCheck.startsWith("..") || path.isAbsolute(relCheck)) {
-            throw new Error(`Path escapes workspace: ${rel}`);
-        }
+        /* const root = path.resolve(this.config.codebasePath);
+         const relCheck = path.relative(root, abs);
+         if (relCheck.startsWith("..") || path.isAbsolute(relCheck)) {
+             throw new Error(`Path escapes workspace: ${rel}`);
+         }*/
         return abs;
     }
 
@@ -79,7 +82,7 @@ export class ToolExecutor {
         return fs.readFileSync(abs, "utf8");
     }
 
-    readFile(rel: string): string {
+    async readFile(rel: string): Promise<string> {
         this.assertNotExcluded(rel, "read_file");
         const abs = this.resolveSafe(rel);
         if (!fs.existsSync(abs) || !fs.statSync(abs).isFile()) {
@@ -89,6 +92,24 @@ export class ToolExecutor {
         if (st.size > this.config.maxFileSizeToRead) {
             throw new Error(`File too large: ${rel}`);
         }
+
+        // Check if the file is a PDF
+        if (path.extname(abs).toLowerCase() === ".pdf") {
+            const dataBuffer = fs.readFileSync(abs);
+            const parser = new PDFParse({ data: dataBuffer });
+            const pdfData = await parser.getText();
+
+            this.tracker.log({
+                type: "code_analysis",
+                path: this.norm(rel),
+                details: { after: `[PDF content extracted: ${pdfData.text.length} chars]`, toolName: "read_file" },
+                status: "executed",
+            });
+
+            return pdfData.text;
+        }
+
+        // Normal text files
         const text = fs.readFileSync(abs, "utf8");
         this.tracker.log({
             type: "code_analysis",
@@ -98,6 +119,8 @@ export class ToolExecutor {
         });
         return text;
     }
+
+
 
     createFile(rel: string, content: string): string {
         if (!this.config.tools.allowFileCreation)
