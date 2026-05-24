@@ -4,8 +4,8 @@ export const clip = (text: string, max = 4000) =>
 export const replyMd = async (ctx: { reply: (t: string, o?: object) => Promise<unknown> }, text: string) => {
     try {
         await ctx.reply(clip(text), { parse_mode: 'Markdown' });
-    } catch (err) {
-        console.warn("[Telegram Bot] Markdown parsing failed, falling back to plain text:", err);
+    } catch (err: any) {
+        console.warn("[Telegram Bot] Markdown parsing failed, falling back to plain text. Details:", err.message || err);
         await ctx.reply(clip(text));
     }
 };
