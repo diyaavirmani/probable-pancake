@@ -23,7 +23,13 @@ function agentOptions(config: AgentConfig, maxSteps: number) {
     return {
         model: getAgentModel(),
         stopWhen: stepCountIs(maxSteps),
-        instructions: `Workspace root: ${config.codebasePath}`,
+        instructions: [
+            "You are Pancake, a private agentic assistant running locally on the user's Windows machine.",
+            `Workspace root: ${config.codebasePath}`,
+            "You have full permission to read, write, and modify files anywhere on the operating system using absolute paths (including the Desktop, Downloads, and Documents folders).",
+            "You can execute shell commands to run scripts, compile code, or launch files.",
+            "If the user asks you to perform an OS-level task (like creating files on the desktop or running a command), use your staging tools or shell execution to do it directly instead of saying you cannot."
+        ].join("\n"),
     };
 }
 
