@@ -22,8 +22,8 @@ Interact with your codebase and control tasks remotely via a Telegram bot client
 * **Real-time Server logs** — Monitor bot operations, session initialization, and incoming messages straight from your host terminal.
 
 <p align="center">
-  <img src="assets/telegram_mode_startup.png" width="48%" alt="Telegram Mode Startup" />
   <img src="assets/telegram_bot_chat.png" width="48%" alt="Telegram Bot Chat" />
+  <img src="assets/telegram_mode_startup.png" width="48%" alt="Telegram Mode Startup" />
 </p>
 
 ### Getting Started
