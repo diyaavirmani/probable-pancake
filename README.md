@@ -6,12 +6,25 @@ Pancake is a agentic coding assistant and search subsystem. Built entirely using
 ## Features
 
 ###  1. Terminal UI (`TUI`)
-Run `pancake-build wakeup` to view  banner and select your preferred operational mode:
+Run `pancake-build wakeup` to view the banner and select your preferred operational mode:
 * **  Ask Mode** — Ask complex questions about your codebase or the web. Pancake analyzes your files and pulls real-time information to synthesize detailed answers (with the option to instantly save answers as local `.md` docs).
-* ** Agent Mode** — Provide a goal  and let it write, modify, or delete files, staging every change before you apply them.
+* ** Agent Mode** — Provide a goal and let it write, modify, or delete files, staging every change before you apply them.
 * ** Plan Mode** — Generate sequential execution steps for complex requirements, review and select/toggle specific milestones, and execute them step-by-step with safety staging.
 
+<p align="center">
+  <img src="assets/cli_mode_selection.png" width="48%" alt="CLI Mode Selection" />
+  <img src="assets/cli_plan_mode.png" width="48%" alt="CLI Plan Mode" />
+</p>
+
 ###  2.  Telegram Bot  (`minipancake_bot`)
+Interact with your codebase and control tasks remotely via a Telegram bot client:
+* **Remote Assistant** — Use standard commands like `/ask`, `/agent`, and `/plan` directly from your mobile or desktop Telegram application.
+* **Real-time Server logs** — Monitor bot operations, session initialization, and incoming messages straight from your host terminal.
+
+<p align="center">
+  <img src="assets/telegram_mode_startup.png" width="48%" alt="Telegram Mode Startup" />
+  <img src="assets/telegram_bot_chat.png" width="48%" alt="Telegram Bot Chat" />
+</p>
 
 ### Getting Started
 
